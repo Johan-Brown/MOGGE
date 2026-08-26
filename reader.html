@@ -41,6 +41,7 @@
       font-family: Arial, sans-serif;
     }
 
+
     /* =========================================================
        HEADER
        ========================================================= */
@@ -57,6 +58,7 @@
         0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
+
     .reader-nav {
       min-height: 64px;
 
@@ -68,12 +70,14 @@
       padding: 0 18px;
     }
 
+
     .back-link {
       color: white;
       text-decoration: none;
       font-weight: 700;
       white-space: nowrap;
     }
+
 
     .reader-title {
       margin: 0;
@@ -88,6 +92,7 @@
       white-space: nowrap;
     }
 
+
     /* =========================================================
        READER AREA
        ========================================================= */
@@ -99,6 +104,7 @@
         16px auto
         30px auto;
     }
+
 
     #viewer {
       position: relative;
@@ -118,7 +124,10 @@
       overflow: hidden;
     }
 
-    /* EPUB.js iframe */
+
+    /* =========================================================
+       EPUB.JS IFRAME
+       ========================================================= */
 
     #viewer iframe {
       display: block;
@@ -130,17 +139,21 @@
       background: white;
     }
 
+
     /* =========================================================
-       COVER PAGE
+       COVER OVERLAY
+       
+       IMPORTANT:
+       We DO NOT replace #viewer.innerHTML anymore.
+       The EPUB rendition stays alive underneath.
        ========================================================= */
 
-    .mogge-cover-page {
-      position: relative;
+    #coverLayer {
+      position: absolute;
 
-      width: 100%;
-      height: calc(100vh - 150px);
+      inset: 0;
 
-      min-height: 500px;
+      z-index: 500;
 
       display: flex;
 
@@ -152,6 +165,27 @@
       padding: 25px;
     }
 
+
+    #coverLayer.hidden {
+      display: none;
+    }
+
+
+    .mogge-cover-page {
+      position: relative;
+
+      width: 100%;
+      height: 100%;
+
+      min-height: 500px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+
     .mogge-cover-image {
       display: block;
 
@@ -159,7 +193,9 @@
       height: auto;
 
       max-width: 92%;
-      max-height: calc(100% - 90px);
+
+      max-height:
+        calc(100% - 90px);
 
       object-fit: contain;
 
@@ -168,6 +204,7 @@
       border-radius: 4px;
     }
 
+
     .mogge-cover-next {
       position: absolute;
 
@@ -175,36 +212,48 @@
       bottom: 20px;
 
       border: none;
+
       border-radius: 25px;
 
       padding: 12px 26px;
 
       background: #0b4f43;
+
       color: white;
 
       font-size: 16px;
+
       font-weight: 700;
 
       cursor: pointer;
 
       box-shadow:
         0 5px 18px rgba(0, 0, 0, 0.15);
+
+      z-index: 10;
     }
+
 
     .mogge-cover-next:hover {
       opacity: 0.9;
-      transform: translateY(-1px);
+
+      transform:
+        translateY(-1px);
     }
 
+
     .mogge-cover-next:active {
-      transform: translateY(0);
+      transform:
+        translateY(0);
     }
+
 
     .mogge-cover-fallback {
       width: 100%;
       height: 100%;
 
       display: flex;
+
       align-items: center;
       justify-content: center;
 
@@ -212,6 +261,7 @@
 
       padding: 30px;
     }
+
 
     /* =========================================================
        LOADING / ERROR
@@ -221,6 +271,7 @@
       min-height: 50vh;
 
       display: grid;
+
       place-items: center;
 
       padding: 30px;
@@ -231,6 +282,7 @@
 
       line-height: 1.6;
     }
+
 
     .reader-error {
       max-width: 700px;
@@ -246,6 +298,7 @@
       border-radius: 14px;
     }
 
+
     /* =========================================================
        MOBILE
        ========================================================= */
@@ -254,41 +307,56 @@
 
       .reader-nav {
         min-height: 58px;
+
         padding: 0 12px;
       }
+
 
       .back-link {
         font-size: 14px;
       }
 
+
       .reader-title {
         max-width: 55%;
+
         font-size: 15px;
       }
 
+
       .reader-shell {
         width: calc(100% - 10px);
+
         margin-top: 8px;
       }
+
 
       #viewer {
         border-radius: 12px;
       }
 
-      .mogge-cover-page {
-        height: calc(100vh - 135px);
-        min-height: 400px;
 
+      #coverLayer {
         padding: 15px;
       }
 
+
+      .mogge-cover-page {
+        min-height: 400px;
+      }
+
+
       .mogge-cover-image {
         max-width: 95%;
-        max-height: calc(100% - 75px);
+
+        max-height:
+          calc(100% - 75px);
       }
+
 
       .mogge-cover-next {
         right: 15px;
+
         bottom: 15px;
 
         padding: 10px 21px;
@@ -305,6 +373,7 @@
 
 <body>
 
+
   <!-- =========================================================
        HEADER
        ========================================================= -->
@@ -320,6 +389,7 @@
         ← Back to Mogge
       </a>
 
+
       <h1
         id="readerTitle"
         class="reader-title"
@@ -330,6 +400,7 @@
     </div>
 
   </header>
+
 
 
   <!-- =========================================================
@@ -349,6 +420,7 @@
   </main>
 
 
+
   <!-- =========================================================
        LIBRARIES
        ========================================================= -->
@@ -357,9 +429,11 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
   </script>
 
+
   <script
     src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js">
   </script>
+
 
 
   <!-- =========================================================
@@ -380,6 +454,7 @@
         window.location.search
       );
 
+
     const requestedBook =
       params.get("book");
 
@@ -390,6 +465,7 @@
 
     const viewer =
       document.getElementById("viewer");
+
 
     const readerTitle =
       document.getElementById("readerTitle");
@@ -413,6 +489,9 @@
 
     let coverUrl = null;
 
+    let coverLayer = null;
+
+
 
     /* =========================================================
        MESSAGE
@@ -429,6 +508,7 @@
     }
 
 
+
     /* =========================================================
        ERROR
        ========================================================= */
@@ -439,6 +519,7 @@
         "EPUB READER ERROR:",
         error
       );
+
 
       message(`
 
@@ -468,6 +549,7 @@
       `);
 
     }
+
 
 
     /* =========================================================
@@ -506,6 +588,7 @@
     }
 
 
+
     /* =========================================================
        WAIT
        ========================================================= */
@@ -523,6 +606,7 @@
     }
 
 
+
     /* =========================================================
        CHECK IF SECTION IS EMPTY
        ========================================================= */
@@ -535,23 +619,29 @@
           return true;
         }
 
+
         await section.load(
           book.load.bind(book)
         );
 
+
         const document =
           section.document;
+
 
         if (!document) {
           return true;
         }
 
+
         const body =
           document.body;
+
 
         if (!body) {
           return true;
         }
+
 
         /*
          * Remove scripts and styles
@@ -561,6 +651,7 @@
         const clone =
           body.cloneNode(true);
 
+
         clone
           .querySelectorAll(
             "script,style,noscript"
@@ -568,6 +659,7 @@
           .forEach(
             el => el.remove()
           );
+
 
         const text =
           (clone.textContent || "")
@@ -589,13 +681,17 @@
         }
 
 
+
         /*
          * Image-only pages can still
          * be real story pages.
          */
 
         const images =
-          body.querySelectorAll("img");
+          body.querySelectorAll(
+            "img"
+          );
+
 
         if (images.length > 0) {
 
@@ -606,13 +702,17 @@
         }
 
 
+
         /*
          * SVG can also represent
          * an image-only page.
          */
 
         const svg =
-          body.querySelectorAll("svg");
+          body.querySelectorAll(
+            "svg"
+          );
+
 
         if (svg.length > 0) {
 
@@ -627,12 +727,14 @@
 
         return true;
 
+
       } catch (error) {
 
         console.warn(
           "Could not inspect section:",
           error
         );
+
 
         /*
          * If inspection fails,
@@ -646,6 +748,7 @@
     }
 
 
+
     /* =========================================================
        FIND FIRST REAL STORY SECTION
        ========================================================= */
@@ -657,8 +760,10 @@
         const spineItems =
           book.spine.spineItems || [];
 
+
         totalSections =
           spineItems.length;
+
 
         console.log(
           "EPUB spine sections:",
@@ -674,6 +779,7 @@
 
           const section =
             spineItems[i];
+
 
           console.log(
             "Checking EPUB section:",
@@ -696,11 +802,13 @@
               section.href
             );
 
+
             return section;
 
           }
 
         }
+
 
       } catch (error) {
 
@@ -719,6 +827,42 @@
       return book.spine.get(0);
 
     }
+
+
+
+    /* =========================================================
+       CREATE COVER LAYER
+       
+       IMPORTANT:
+       This does NOT replace #viewer.
+       ========================================================= */
+
+    function createCoverLayer() {
+
+      if (coverLayer) {
+        return coverLayer;
+      }
+
+
+      coverLayer =
+        document.createElement(
+          "div"
+        );
+
+
+      coverLayer.id =
+        "coverLayer";
+
+
+      viewer.appendChild(
+        coverLayer
+      );
+
+
+      return coverLayer;
+
+    }
+
 
 
     /* =========================================================
@@ -749,6 +893,7 @@
             "No EPUB cover image found."
           );
 
+
           return false;
 
         }
@@ -760,7 +905,18 @@
         );
 
 
-        viewer.innerHTML = `
+        const layer =
+          createCoverLayer();
+
+
+        /*
+         * IMPORTANT:
+         *
+         * We only change the cover layer.
+         * We never touch viewer.innerHTML.
+         */
+
+        layer.innerHTML = `
 
           <div class="mogge-cover-page">
 
@@ -770,10 +926,11 @@
               class="mogge-cover-image"
             >
 
+
             <button
               type="button"
               class="mogge-cover-next"
-              onclick="openStoryFromCover()"
+              id="coverNextButton"
             >
               Next →
             </button>
@@ -783,11 +940,36 @@
         `;
 
 
+        const nextButton =
+          document.getElementById(
+            "coverNextButton"
+          );
+
+
+        if (nextButton) {
+
+          nextButton.addEventListener(
+            "click",
+            openStoryFromCover
+          );
+
+        }
+
+
+        /*
+         * Show overlay.
+         */
+
+        layer.classList.remove(
+          "hidden"
+        );
+
+
         showingCover = true;
 
 
         /*
-         * Reset reader scroll position.
+         * Reset page scroll.
          */
 
         window.scrollTo({
@@ -798,6 +980,7 @@
 
         return true;
 
+
       } catch (error) {
 
         console.warn(
@@ -805,11 +988,34 @@
           error
         );
 
+
         return false;
 
       }
 
     }
+
+
+
+    /* =========================================================
+       HIDE COVER
+       ========================================================= */
+
+    function hideBookCover() {
+
+      if (coverLayer) {
+
+        coverLayer.classList.add(
+          "hidden"
+        );
+
+      }
+
+
+      showingCover = false;
+
+    }
+
 
 
     /* =========================================================
@@ -840,20 +1046,24 @@
       }
 
 
-      showingCover = false;
-
-
       try {
 
         /*
-         * Restore EPUB viewer.
+         * IMPORTANT:
+         *
+         * Do NOT do:
+         *
+         * viewer.innerHTML = "";
+         *
+         * because that destroys the EPUB iframe.
          */
 
-        viewer.innerHTML = "";
+
+        hideBookCover();
 
 
         /*
-         * Open the actual first story section.
+         * Display the actual story section.
          */
 
         await rendition.display(
@@ -871,6 +1081,7 @@
           "Story opened after cover."
         );
 
+
       } catch (error) {
 
         console.error(
@@ -878,11 +1089,13 @@
           error
         );
 
+
         showError(error);
 
       }
 
     }
+
 
 
     /* =========================================================
@@ -895,6 +1108,7 @@
 
         const document =
           contents.document;
+
 
         if (!document) {
           return;
@@ -910,6 +1124,7 @@
             "mogge-reader-overrides"
           );
 
+
         if (existing) {
           return;
         }
@@ -920,6 +1135,7 @@
             "style"
           );
 
+
         style.id =
           "mogge-reader-overrides";
 
@@ -929,11 +1145,13 @@
           html {
 
             margin: 0 !important;
+
             padding: 0 !important;
 
             width: 100% !important;
 
           }
+
 
           body {
 
@@ -949,6 +1167,7 @@
 
           }
 
+
           img,
           video,
           svg,
@@ -961,6 +1180,7 @@
               border-box !important;
 
           }
+
 
           * {
 
@@ -981,6 +1201,7 @@
           "Reader CSS injected."
         );
 
+
       } catch (error) {
 
         console.warn(
@@ -993,6 +1214,7 @@
     }
 
 
+
     /* =========================================================
        ENABLE EPUB JAVASCRIPT
        ========================================================= */
@@ -1003,6 +1225,7 @@
 
         const document =
           contents.document;
+
 
         if (!document) {
           return;
@@ -1037,6 +1260,7 @@
     }
 
 
+
     /* =========================================================
        UPDATE LOCATION
        ========================================================= */
@@ -1053,6 +1277,7 @@
         const start =
           location.start;
 
+
         if (!start) {
           return;
         }
@@ -1067,6 +1292,7 @@
           location
         );
 
+
       } catch (error) {
 
         console.warn(
@@ -1077,6 +1303,7 @@
       }
 
     }
+
 
 
     /* =========================================================
@@ -1118,6 +1345,7 @@
           "Moved to next page."
         );
 
+
       } catch (error) {
 
         console.log(
@@ -1129,11 +1357,22 @@
     }
 
 
+
     /* =========================================================
        PREVIOUS PAGE
        ========================================================= */
 
     async function previousPage() {
+
+      /*
+       * If cover is already showing,
+       * nothing more to do.
+       */
+
+      if (showingCover) {
+        return;
+      }
+
 
       if (!rendition) {
         return;
@@ -1145,36 +1384,37 @@
        * Previous should return to the cover.
        */
 
-      if (!showingCover) {
+      try {
 
-        try {
-
-          const location =
-            rendition.currentLocation();
+        const location =
+          rendition.currentLocation();
 
 
-          if (
-            location &&
-            location.start &&
-            firstStorySection &&
-            location.start.index ===
-              firstStorySection.index
-          ) {
+        if (
+          location &&
+          location.start &&
+          firstStorySection &&
+          location.start.index ===
+            firstStorySection.index
+        ) {
 
+          const coverShown =
             await showBookCover();
 
-            return;
 
+          if (coverShown) {
+            return;
           }
 
-        } catch (error) {
-
-          console.warn(
-            "Could not determine current location:",
-            error
-          );
-
         }
+
+
+      } catch (error) {
+
+        console.warn(
+          "Could not determine current location:",
+          error
+        );
 
       }
 
@@ -1198,6 +1438,7 @@
           "Moved to previous page."
         );
 
+
       } catch (error) {
 
         console.log(
@@ -1207,6 +1448,7 @@
       }
 
     }
+
 
 
     /* =========================================================
@@ -1275,6 +1517,7 @@
     );
 
 
+
     /* =========================================================
        RESIZE
        ========================================================= */
@@ -1310,6 +1553,7 @@
 
       }
     );
+
 
 
     /* =========================================================
@@ -1537,6 +1781,7 @@
 
           }
 
+
         } catch (error) {
 
           console.warn(
@@ -1578,7 +1823,7 @@
 
 
         /* =====================================================
-           CREATE RENDITION
+           CREATE EPUB RENDITION
            ===================================================== */
 
         rendition =
@@ -1592,10 +1837,8 @@
                 "calc(100vh - 150px)",
 
               /*
-               * IMPORTANT:
-               *
-               * paginated means a long story
-               * automatically becomes multiple pages.
+               * Paginated mode keeps
+               * story navigation working.
                */
 
               flow: "paginated",
@@ -1605,16 +1848,14 @@
               spread: "none",
 
               /*
-               * IMPORTANT:
-               *
-               * This allows trusted interactive
-               * EPUB JavaScript to work.
+               * Allow trusted interactive
+               * EPUB JavaScript.
                */
 
               allowScriptedContent: true,
 
               /*
-               * Allow EPUB popups where required.
+               * Allow EPUB popups.
                */
 
               allowPopups: true
@@ -1633,6 +1874,7 @@
             injectReaderStyles(
               contents
             );
+
 
             enableBookScripts(
               contents
@@ -1706,26 +1948,41 @@
 
 
         /* =====================================================
-           SHOW COVER FIRST
+           IMPORTANT:
+           RENDER FIRST STORY BEHIND COVER
+           
+           This is the key fix.
+           
+           The story is rendered into the EPUB iframe,
+           while the cover is simply placed over it.
+           ===================================================== */
+
+        console.log(
+          "Rendering first story behind cover..."
+        );
+
+
+        await rendition.display(
+          firstStorySection.href
+        );
+
+
+        /* =====================================================
+           SHOW COVER ON TOP
            ===================================================== */
 
         const coverShown =
           await showBookCover();
 
 
-        /*
-         * If EPUB metadata doesn't contain
-         * a cover, immediately show the story.
-         */
-
         if (!coverShown) {
 
+          /*
+           * No cover:
+           * story is already displayed.
+           */
+
           showingCover = false;
-
-
-          await rendition.display(
-            firstStorySection.href
-          );
 
 
           console.log(
@@ -1735,7 +1992,7 @@
         } else {
 
           console.log(
-            "Cover displayed first."
+            "Cover displayed over first story."
           );
 
         }
@@ -1762,6 +2019,7 @@
           "EPUB reader ready."
         );
 
+
       } catch (error) {
 
         showError(
@@ -1773,6 +2031,7 @@
     }
 
 
+
     /* =========================================================
        START
        ========================================================= */
@@ -1780,6 +2039,7 @@
     initReader();
 
   </script>
+
 
 </body>
 
