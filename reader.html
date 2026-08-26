@@ -1135,18 +1135,24 @@
            FIND FIRST REAL SECTION
            ----------------------------------------------------- */
 
-        const firstSection =
-          await findFirstContentSection();
+        // const firstSection =
+        //   await findFirstContentSection();
 
 
-        if (!firstSection) {
+        // if (!firstSection) {
 
-          throw new Error(
-            "No readable content section was found in this EPUB."
-          );
+        //   throw new Error(
+        //     "No readable content section was found in this EPUB."
+        //   );
 
-        }
-
+        // }
+        
+        /* -----------------------------------------------------
+          DISPLAY FIRST CONTENT (true start of the book, cover included)
+          ----------------------------------------------------- */
+          
+        await rendition.display();
+        console.log("EPUB rendered successfully.");
 
         console.log(
           "Starting section:",
