@@ -129,6 +129,85 @@
     }
 
     /* =========================================================
+       PAGE TAP ZONES (overlay left/right halves of viewer)
+       ========================================================= */
+
+    .page-tap-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+
+      width: 15%;
+
+      border: 0;
+      margin: 0;
+      padding: 0;
+
+      background: transparent;
+      cursor: pointer;
+
+      z-index: 10;
+    }
+
+    .page-tap-zone-left {
+      left: 0;
+    }
+
+    .page-tap-zone-right {
+      right: 0;
+    }
+
+    /* =========================================================
+       PREV / NEXT CONTROLS
+       ========================================================= */
+
+    .reader-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+
+      margin-top: 14px;
+    }
+
+    .reader-nav-btn {
+      min-width: 100px;
+
+      padding: 10px 22px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #0b4f43;
+      color: white;
+
+      font-size: 15px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      box-shadow: 0 6px 16px rgba(11, 79, 67, 0.25);
+    }
+
+    .reader-nav-btn:hover {
+      background: #0e6353;
+    }
+
+    .reader-nav-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .reader-page-indicator {
+      min-width: 70px;
+      text-align: center;
+
+      color: #4d5a56;
+      font-size: 14px;
+    }
+
+    /* =========================================================
        LOADING / ERROR
        ========================================================= */
 
@@ -235,6 +314,46 @@
         Preparing the reader…
       </div>
 
+      <!-- Tap zones: click left half = prev, right half = next -->
+      <button
+        id="prevZone"
+        class="page-tap-zone page-tap-zone-left"
+        aria-label="Previous page"
+        type="button"
+      ></button>
+
+      <button
+        id="nextZone"
+        class="page-tap-zone page-tap-zone-right"
+        aria-label="Next page"
+        type="button"
+      ></button>
+
+    </div>
+
+    <div class="reader-controls">
+
+      <button
+        id="prevBtn"
+        class="reader-nav-btn"
+        type="button"
+      >
+        ← Prev
+      </button>
+
+      <span
+        id="pageIndicator"
+        class="reader-page-indicator"
+      ></span>
+
+      <button
+        id="nextBtn"
+        class="reader-nav-btn"
+        type="button"
+      >
+        Next →
+      </button>
+
     </div>
 
   </main>
@@ -284,6 +403,21 @@
 
     const readerTitle =
       document.getElementById("readerTitle");
+
+    const prevBtn =
+      document.getElementById("prevBtn");
+
+    const nextBtn =
+      document.getElementById("nextBtn");
+
+    const prevZone =
+      document.getElementById("prevZone");
+
+    const nextZone =
+      document.getElementById("nextZone");
+
+    const pageIndicator =
+      document.getElementById("pageIndicator");
 
 
     /* =========================================================
@@ -732,6 +866,16 @@
           location
         );
 
+        if (
+          pageIndicator &&
+          totalSections
+        ) {
+
+          pageIndicator.textContent =
+            `${currentSection + 1} / ${totalSections}`;
+
+        }
+
       } catch (error) {
 
         console.warn(
@@ -867,6 +1011,39 @@
 
       }
     );
+
+
+    /* =========================================================
+       BUTTON / TAP ZONE NAVIGATION
+       ========================================================= */
+
+    if (prevBtn) {
+      prevBtn.addEventListener(
+        "click",
+        previousPage
+      );
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener(
+        "click",
+        nextPage
+      );
+    }
+
+    if (prevZone) {
+      prevZone.addEventListener(
+        "click",
+        previousPage
+      );
+    }
+
+    if (nextZone) {
+      nextZone.addEventListener(
+        "click",
+        nextPage
+      );
+    }
 
 
     /* =========================================================
@@ -1098,6 +1275,15 @@
 
         console.log(
           "EPUB book is ready."
+        );
+
+
+        totalSections =
+          (book.spine.spineItems || []).length;
+
+        console.log(
+          "EPUB spine sections:",
+          totalSections
         );
 
 
