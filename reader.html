@@ -33,50 +33,134 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
-  <script>
-    const params = new URLSearchParams(location.search);
-    const requestedBook = params.get('book');
-    const viewer = document.getElementById('viewer');
-    const readerTitle = document.getElementById('readerTitle');
 
-    function message(text) {
-      viewer.innerHTML = '<div class="reader-message">' + text + '</div>';
-    }
+<script>
+const params = new URLSearchParams(location.search);
+const requestedBook = params.get('book');
 
-    async function initReader() {
-      if (!requestedBook) {
+const viewer = document.getElementById('viewer');
+const readerTitle = document.getElementById('readerTitle');
+
+function message(text) {
+    viewer.innerHTML = `
+        <div class="reader-message">
+            ${text}
+        </div>
+    `;
+}
+
+async function initReader() {
+
+    if (!requestedBook) {
         message('No book was selected.');
         return;
-      }
-
-      try {
-        const response = await fetch('./books.json', { cache: 'no-cache' });
-        if (!response.ok) throw new Error('books.json could not be loaded.');
-        const data = await response.json();
-        const books = Array.isArray(data) ? data : (data.books || []);
-        const book = books.find(item => item.file === requestedBook);
-
-        if (!book) {
-          message('That book is not available in this collection.');
-          return;
-        }
-
-        readerTitle.textContent = book.title || 'Mogge Book';
-        viewer.innerHTML = '';
-        const epub = ePub(book.file);
-        const rendition = epub.renderTo('viewer', {
-          width: '100%',
-          height: 'calc(100vh - 145px)',
-          spread: 'auto'
-        });
-        await rendition.display();
-      } catch (error) {
-        console.error(error);
-        message('Unable to open this EPUB in the browser. You can still open the EPUB file directly from the library repository.');
-      }
     }
 
-    initReader();
-  </script>
+    try {
+
+        // Load the book catalogue
+        const response = await fetch('./books.json', {
+            cache: 'no-cache'
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `books.json could not be loaded (${response.status})`
+            );
+        }
+
+        const data = await response.json();
+
+        const books = Array.isArray(data)
+            ? data
+            : (data.books || []);
+
+        const book = books.find(
+            item => item.file === requestedBook
+        );
+
+        if (!book) {
+            throw new Error(
+                `Book not found in books.json: ${requestedBook}`
+            );
+        }
+
+        readerTitle.textContent =
+            book.title || 'Mogge Book';
+
+        viewer.innerHTML = `
+            <div class="reader-message">
+                Opening <strong>${book.title}</strong>…
+            </div>
+        `;
+
+        // Build a proper URL relative to reader.html
+        const bookUrl = new URL(
+            book.file,
+            window.location.href
+        ).href;
+
+        console.log('Opening EPUB:', bookUrl);
+
+        // Download EPUB ourselves
+        const epubResponse = await fetch(bookUrl);
+
+        if (!epubResponse.ok) {
+            throw new Error(
+                `EPUB could not be downloaded (${epubResponse.status})`
+            );
+        }
+
+        const epubData = await epubResponse.arrayBuffer();
+
+        console.log(
+            'EPUB downloaded:',
+            epubData.byteLength,
+            'bytes'
+        );
+
+        if (!epubData.byteLength) {
+            throw new Error('The EPUB file is empty.');
+        }
+
+        // Clear loading message
+        viewer.innerHTML = '';
+
+        // Give EPUB.js the downloaded EPUB data
+        const epub = ePub(epubData);
+
+        const rendition = epub.renderTo('viewer', {
+            width: '100%',
+            height: 'calc(100vh - 145px)',
+            spread: 'auto'
+        });
+
+        await rendition.display();
+
+        console.log('EPUB rendered successfully.');
+
+    } catch (error) {
+
+        console.error(
+            'EPUB READER ERROR:',
+            error
+        );
+
+        message(`
+            <div>
+                <strong>Unable to open this book.</strong>
+                <br><br>
+                ${error.message}
+                <br><br>
+                <small>
+                    Check the browser console for more details.
+                </small>
+            </div>
+        `);
+    }
+}
+
+initReader();
+</script>
 </body>
 </html>
