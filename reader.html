@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <meta name="theme-color" content="#0b4f43">
 
   <title>Reading — Mogge</title>
@@ -19,16 +24,13 @@
       margin: 0;
       padding: 0;
       min-height: 100%;
-      background: #eef5f2;
     }
 
     body {
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: #eef5f2;
+      overflow-x: hidden;
     }
-
-    /* =========================
-       HEADER
-    ========================= */
 
     .reader-header {
       position: sticky;
@@ -45,7 +47,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 0 20px;
+      padding: 0 18px;
     }
 
     .back-link {
@@ -64,131 +66,92 @@
       white-space: nowrap;
     }
 
-    /* =========================
-       READER
-    ========================= */
-
     .reader-shell {
-      width: min(1200px, calc(100% - 24px));
+      width: min(1100px, calc(100% - 24px));
       margin: 18px auto 20px;
     }
 
+    /*
+      IMPORTANT:
+      The viewer itself is now a scrolling document.
+      EPUB.js will no longer paginate the content into hundreds
+      of tiny pages.
+    */
     #viewer {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - 145px);
-      min-height: 500px;
+      min-height: calc(100vh - 160px);
       background: white;
       border-radius: 18px;
       box-shadow: 0 15px 45px rgba(16,65,53,.12);
       overflow: hidden;
     }
 
-    /* EPUB.js iframe */
-
-    #viewer iframe {
-      border: 0 !important;
-      background: white;
-    }
-
-    /* =========================
-       LOADING / ERROR
-    ========================= */
-
     .reader-message {
       display: grid;
       place-items: center;
-      min-height: 100%;
+      min-height: 50vh;
       padding: 30px;
       color: #65736f;
       text-align: center;
     }
 
-    /* =========================
-       CONTROLS
-    ========================= */
-
-    .reader-controls {
-      width: min(1200px, calc(100% - 24px));
-      margin: 12px auto 25px;
-
+    /*
+      Chapter navigation
+    */
+    .chapter-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
+      gap: 24px;
+      padding: 12px 10px 30px;
     }
 
-    .reader-button {
-      border: none;
+    .chapter-button {
+      border: 0;
+      border-radius: 12px;
       background: #0b4f43;
       color: white;
-
-      padding: 11px 22px;
-      border-radius: 10px;
-
-      font-size: 15px;
+      padding: 12px 22px;
+      font-size: 16px;
       font-weight: 700;
-
       cursor: pointer;
-
-      transition:
-        background .2s ease,
-        transform .2s ease,
-        opacity .2s ease;
+      transition: transform .15s ease,
+                  opacity .15s ease,
+                  background .15s ease;
     }
 
-    .reader-button:hover {
-      background: #086457;
+    .chapter-button:hover {
       transform: translateY(-1px);
+      background: #086557;
     }
 
-    .reader-button:disabled {
-      opacity: .4;
+    .chapter-button:disabled {
+      opacity: .35;
       cursor: not-allowed;
       transform: none;
     }
 
-    .reader-progress {
-      min-width: 130px;
+    .chapter-status {
+      min-width: 120px;
       text-align: center;
-      color: #52645f;
-      font-size: 14px;
+      color: #52635e;
+      font-weight: 700;
+    }
+
+    /*
+      Loading overlay
+    */
+    .loading {
+      display: grid;
+      place-items: center;
+      min-height: 50vh;
+      color: #52635e;
       font-weight: 600;
     }
 
-    /* =========================
-       CLICK ZONES
-    ========================= */
-
-    .reader-zone {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-
-      width: 18%;
-
-      z-index: 20;
-
-      cursor: pointer;
-    }
-
-    .reader-zone-left {
-      left: 0;
-    }
-
-    .reader-zone-right {
-      right: 0;
-    }
-
-    .reader-zone:hover {
-      background: rgba(11,79,67,.025);
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 700px) {
+    /*
+      Mobile
+    */
+    @media (max-width: 600px) {
 
       .reader-nav {
         min-height: 60px;
@@ -201,28 +164,26 @@
       }
 
       .reader-shell {
-        width: calc(100% - 10px);
+        width: calc(100% - 12px);
         margin-top: 8px;
       }
 
       #viewer {
-        height: calc(100vh - 135px);
-        min-height: 400px;
         border-radius: 12px;
       }
 
-      .reader-controls {
-        width: calc(100% - 10px);
-        gap: 8px;
+      .chapter-controls {
+        gap: 10px;
       }
 
-      .reader-button {
-        padding: 10px 16px;
+      .chapter-button {
+        padding: 10px 14px;
+        font-size: 14px;
       }
 
-      .reader-progress {
+      .chapter-status {
         min-width: 80px;
-        font-size: 12px;
+        font-size: 13px;
       }
     }
   </style>
@@ -230,592 +191,637 @@
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+<header class="reader-header">
 
-  <header class="reader-header">
+  <div class="container reader-nav">
 
-    <div class="container reader-nav">
-
-      <a
-        class="back-link"
-        href="./"
-      >
-        ← Back to Mogge
-      </a>
-
-      <h1
-        id="readerTitle"
-        class="reader-title"
-      >
-        Loading book…
-      </h1>
-
-    </div>
-
-  </header>
-
-
-  <!-- =========================
-       BOOK VIEWER
-  ========================== -->
-
-  <main class="reader-shell">
-
-    <div id="viewer">
-
-      <div class="reader-message">
-        Preparing the reader…
-      </div>
-
-    </div>
-
-  </main>
-
-
-  <!-- =========================
-       NAVIGATION
-  ========================== -->
-
-  <div class="reader-controls">
-
-    <button
-      id="previousButton"
-      class="reader-button"
-      type="button"
+    <a
+      class="back-link"
+      href="./"
     >
-      ← Previous
-    </button>
+      ← Back to Mogge
+    </a>
 
-    <div
-      id="readerProgress"
-      class="reader-progress"
+    <h1
+      id="readerTitle"
+      class="reader-title"
     >
-      Loading…
-    </div>
-
-    <button
-      id="nextButton"
-      class="reader-button"
-      type="button"
-    >
-      Next →
-    </button>
+      Loading book…
+    </h1>
 
   </div>
 
-
-  <!-- JSZip -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-  <!-- EPUB.js -->
-
-  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</header>
 
 
-  <script>
+<main class="reader-shell">
 
-    /* =========================================================
-       GET BOOK FROM URL
-    ========================================================= */
+  <div id="viewer">
 
-    const params = new URLSearchParams(window.location.search);
+    <div class="loading">
+      Preparing the reader…
+    </div>
 
-    const requestedBook = params.get('book');
+  </div>
 
-
-    /* =========================================================
-       ELEMENTS
-    ========================================================= */
-
-    const viewer = document.getElementById('viewer');
-
-    const readerTitle =
-      document.getElementById('readerTitle');
-
-    const previousButton =
-      document.getElementById('previousButton');
-
-    const nextButton =
-      document.getElementById('nextButton');
-
-    const readerProgress =
-      document.getElementById('readerProgress');
+</main>
 
 
-    /* =========================================================
-       GLOBAL READER VARIABLES
-    ========================================================= */
+<div class="chapter-controls">
 
-    let epubBook = null;
+  <button
+    id="prevButton"
+    class="chapter-button"
+    type="button"
+  >
+    ← Previous
+  </button>
 
-    let rendition = null;
+  <div
+    id="chapterStatus"
+    class="chapter-status"
+  >
+    Loading…
+  </div>
 
-    let currentLocation = null;
+  <button
+    id="nextButton"
+    class="chapter-button"
+    type="button"
+  >
+    Next →
+  </button>
+
+</div>
 
 
-    /* =========================================================
-       MESSAGE
-    ========================================================= */
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    function message(text) {
+<!-- EPUB.js -->
+<script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
 
-      viewer.innerHTML = `
-        <div class="reader-message">
-          ${text}
-        </div>
-      `;
+
+<script>
+
+const params = new URLSearchParams(
+  window.location.search
+);
+
+const requestedBook = params.get('book');
+
+const viewer =
+  document.getElementById('viewer');
+
+const readerTitle =
+  document.getElementById('readerTitle');
+
+const prevButton =
+  document.getElementById('prevButton');
+
+const nextButton =
+  document.getElementById('nextButton');
+
+const chapterStatus =
+  document.getElementById('chapterStatus');
+
+
+let book = null;
+
+let rendition = null;
+
+let spineItems = [];
+
+let currentIndex = 0;
+
+
+/*
+  --------------------------------------------------
+  MESSAGE
+  --------------------------------------------------
+*/
+
+function message(text) {
+
+  viewer.innerHTML = `
+    <div class="reader-message">
+      ${text}
+    </div>
+  `;
+
+}
+
+
+/*
+  --------------------------------------------------
+  UPDATE NAVIGATION
+  --------------------------------------------------
+*/
+
+function updateNavigation() {
+
+  const total =
+    spineItems.length;
+
+  chapterStatus.textContent =
+    total
+      ? `Section ${currentIndex + 1} / ${total}`
+      : '';
+
+
+  prevButton.disabled =
+    currentIndex <= 0;
+
+
+  nextButton.disabled =
+    currentIndex >= total - 1;
+
+}
+
+
+/*
+  --------------------------------------------------
+  DISPLAY SECTION
+  --------------------------------------------------
+*/
+
+async function displaySection(index) {
+
+  if (!rendition) {
+    return;
+  }
+
+  if (
+    index < 0 ||
+    index >= spineItems.length
+  ) {
+    return;
+  }
+
+  currentIndex = index;
+
+  updateNavigation();
+
+  const item =
+    spineItems[currentIndex];
+
+  console.log(
+    'Opening EPUB section:',
+    currentIndex,
+    item
+  );
+
+
+  try {
+
+    /*
+      Display this EPUB spine item.
+
+      Because the rendition uses:
+        flow: "scrolled-doc"
+
+      the complete section scrolls vertically
+      instead of being broken into hundreds
+      of pages.
+    */
+
+    await rendition.display(
+      item.href
+    );
+
+
+    /*
+      Scroll the main browser window back
+      to the beginning of the chapter.
+    */
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+
+
+    console.log(
+      'Section displayed:',
+      currentIndex + 1
+    );
+
+  } catch (error) {
+
+    console.error(
+      'Could not display section:',
+      error
+    );
+
+    message(`
+      <div>
+        <strong>
+          Unable to display this section.
+        </strong>
+
+        <br><br>
+
+        ${error.message}
+      </div>
+    `);
+
+  }
+
+}
+
+
+/*
+  --------------------------------------------------
+  PREVIOUS
+  --------------------------------------------------
+*/
+
+prevButton.addEventListener(
+  'click',
+  async function () {
+
+    if (currentIndex <= 0) {
+      return;
+    }
+
+    await displaySection(
+      currentIndex - 1
+    );
+
+  }
+);
+
+
+/*
+  --------------------------------------------------
+  NEXT
+  --------------------------------------------------
+*/
+
+nextButton.addEventListener(
+  'click',
+  async function () {
+
+    if (
+      currentIndex >=
+      spineItems.length - 1
+    ) {
+      return;
+    }
+
+    await displaySection(
+      currentIndex + 1
+    );
+
+  }
+);
+
+
+/*
+  --------------------------------------------------
+  INITIALIZE READER
+  --------------------------------------------------
+*/
+
+async function initReader() {
+
+  if (!requestedBook) {
+
+    message(
+      'No book was selected.'
+    );
+
+    return;
+  }
+
+
+  try {
+
+    /*
+      -----------------------------------------------
+      LOAD BOOK CATALOGUE
+      -----------------------------------------------
+    */
+
+    const response =
+      await fetch(
+        './books.json',
+        {
+          cache: 'no-cache'
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `books.json could not be loaded (${response.status})`
+      );
 
     }
 
 
-    /* =========================================================
-       UPDATE PROGRESS
-    ========================================================= */
+    const data =
+      await response.json();
 
-    function updateProgress(location) {
 
-      if (!location) {
-        readerProgress.textContent = 'Reading';
-        return;
-      }
+    const books =
+      Array.isArray(data)
+        ? data
+        : (data.books || []);
 
-      currentLocation = location;
 
-      let displayed =
-        location.start?.displayed;
+    const bookInfo =
+      books.find(
+        item =>
+          item.file === requestedBook
+      );
 
-      if (
-        displayed &&
-        displayed.page &&
-        displayed.total
+
+    if (!bookInfo) {
+
+      throw new Error(
+        `Book not found in books.json: ${requestedBook}`
+      );
+
+    }
+
+
+    readerTitle.textContent =
+      bookInfo.title ||
+      'Mogge Book';
+
+
+    /*
+      -----------------------------------------------
+      CREATE EPUB URL
+      -----------------------------------------------
+    */
+
+    const bookUrl =
+      new URL(
+        bookInfo.file,
+        window.location.href
+      ).href;
+
+
+    console.log(
+      'Opening EPUB:',
+      bookUrl
+    );
+
+
+    /*
+      -----------------------------------------------
+      DOWNLOAD EPUB
+      -----------------------------------------------
+    */
+
+    const epubResponse =
+      await fetch(bookUrl);
+
+
+    if (!epubResponse.ok) {
+
+      throw new Error(
+        `EPUB could not be downloaded (${epubResponse.status})`
+      );
+
+    }
+
+
+    const epubData =
+      await epubResponse.arrayBuffer();
+
+
+    console.log(
+      'EPUB downloaded:',
+      epubData.byteLength,
+      'bytes'
+    );
+
+
+    if (!epubData.byteLength) {
+
+      throw new Error(
+        'The EPUB file is empty.'
+      );
+
+    }
+
+
+    /*
+      -----------------------------------------------
+      CREATE EPUB
+      -----------------------------------------------
+    */
+
+    book =
+      ePub(epubData);
+
+
+    /*
+      -----------------------------------------------
+      CREATE RENDITION
+      -----------------------------------------------
+
+      IMPORTANT:
+
+      allowScriptedContent: true
+
+      This allows JavaScript contained inside
+      the EPUB to execute.
+
+      flow: "scrolled-doc"
+
+      This prevents EPUB.js from turning a long
+      chapter into hundreds of visual pages.
+    */
+
+    rendition =
+      book.renderTo(
+        'viewer',
+        {
+
+          width: '100%',
+
+          height: 'auto',
+
+          flow: 'scrolled-doc',
+
+          manager: 'continuous',
+
+          view: 'iframe',
+
+          spread: 'none',
+
+          allowScriptedContent: true
+
+        }
+      );
+
+
+    /*
+      -----------------------------------------------
+      WAIT FOR EPUB TO LOAD
+      -----------------------------------------------
+    */
+
+    await book.ready;
+
+
+    console.log(
+      'EPUB ready.'
+    );
+
+
+    /*
+      -----------------------------------------------
+      GET SPINE
+      -----------------------------------------------
+    */
+
+    spineItems =
+      book.spine.spineItems
+        .filter(
+          item =>
+            item.linear !== 'no'
+        );
+
+
+    console.log(
+      'EPUB sections:',
+      spineItems.length
+    );
+
+
+    /*
+      -----------------------------------------------
+      FALLBACK
+      -----------------------------------------------
+    */
+
+    if (!spineItems.length) {
+
+      throw new Error(
+        'No readable sections were found in this EPUB.'
+      );
+
+    }
+
+
+    /*
+      -----------------------------------------------
+      EPUB RENDER EVENTS
+      -----------------------------------------------
+    */
+
+    rendition.on(
+      'rendered',
+      function (
+        section,
+        view
       ) {
 
-        readerProgress.textContent =
-          `Page ${displayed.page} / ${displayed.total}`;
-
-      } else {
-
-        readerProgress.textContent =
-          'Reading';
-
-      }
-
-    }
-
-
-    /* =========================================================
-       BUTTON STATE
-    ========================================================= */
-
-    function updateButtons() {
-
-      previousButton.disabled = false;
-      nextButton.disabled = false;
-
-    }
-
-
-    /* =========================================================
-       NEXT PAGE
-    ========================================================= */
-
-    async function nextPage() {
-
-      if (!rendition) return;
-
-      try {
-
-        await rendition.next();
-
-        console.log('Moved to next page.');
-
-      } catch (error) {
-
         console.log(
-          'Reached end of book or next page unavailable.',
-          error
-        );
-
-      }
-
-    }
-
-
-    /* =========================================================
-       PREVIOUS PAGE
-    ========================================================= */
-
-    async function previousPage() {
-
-      if (!rendition) return;
-
-      try {
-
-        await rendition.prev();
-
-        console.log('Moved to previous page.');
-
-      } catch (error) {
-
-        console.log(
-          'Reached beginning of book or previous page unavailable.',
-          error
-        );
-
-      }
-
-    }
-
-
-    /* =========================================================
-       BUTTON EVENTS
-    ========================================================= */
-
-    previousButton.addEventListener(
-      'click',
-      previousPage
-    );
-
-    nextButton.addEventListener(
-      'click',
-      nextPage
-    );
-
-
-    /* =========================================================
-       KEYBOARD NAVIGATION
-    ========================================================= */
-
-    document.addEventListener(
-      'keydown',
-      function(event) {
-
-        if (event.key === 'ArrowRight') {
-
-          nextPage();
-
-        }
-
-        if (event.key === 'ArrowLeft') {
-
-          previousPage();
-
-        }
-
-      }
-    );
-
-
-    /* =========================================================
-       CLICK NAVIGATION
-    ========================================================= */
-
-    function addNavigationZones() {
-
-      const leftZone =
-        document.createElement('div');
-
-      leftZone.className =
-        'reader-zone reader-zone-left';
-
-      const rightZone =
-        document.createElement('div');
-
-      rightZone.className =
-        'reader-zone reader-zone-right';
-
-
-      leftZone.addEventListener(
-        'click',
-        previousPage
-      );
-
-      rightZone.addEventListener(
-        'click',
-        nextPage
-      );
-
-
-      viewer.appendChild(leftZone);
-
-      viewer.appendChild(rightZone);
-
-    }
-
-
-    /* =========================================================
-       INITIALIZE READER
-    ========================================================= */
-
-    async function initReader() {
-
-      if (!requestedBook) {
-
-        message(
-          'No book was selected.'
-        );
-
-        return;
-
-      }
-
-
-      try {
-
-        /* -----------------------------------------------
-           LOAD BOOK CATALOGUE
-        ------------------------------------------------ */
-
-        const response =
-          await fetch(
-            './books.json',
-            {
-              cache: 'no-cache'
-            }
-          );
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            `books.json could not be loaded (${response.status})`
-          );
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        const books =
-          Array.isArray(data)
-            ? data
-            : (data.books || []);
-
-
-        /* -----------------------------------------------
-           FIND BOOK
-        ------------------------------------------------ */
-
-        const book =
-          books.find(
-            item =>
-              item.file === requestedBook
-          );
-
-
-        if (!book) {
-
-          throw new Error(
-            `Book not found in books.json: ${requestedBook}`
-          );
-
-        }
-
-
-        /* -----------------------------------------------
-           TITLE
-        ------------------------------------------------ */
-
-        readerTitle.textContent =
-          book.title || 'Mogge Book';
-
-
-        message(
-          `Opening <strong>${book.title}</strong>…`
+          'EPUB section rendered:',
+          section
         );
 
 
-        /* -----------------------------------------------
-           BOOK URL
-        ------------------------------------------------ */
+        /*
+          Make the EPUB iframe responsive.
+        */
 
-        const bookUrl =
-          new URL(
-            book.file,
-            window.location.href
-          ).href;
+        try {
 
-
-        console.log(
-          'Opening EPUB:',
-          bookUrl
-        );
+          const iframe =
+            view &&
+            view.iframe;
 
 
-        /* -----------------------------------------------
-           DOWNLOAD EPUB
-        ------------------------------------------------ */
+          if (iframe) {
 
-        const epubResponse =
-          await fetch(bookUrl);
+            iframe.style.width =
+              '100%';
 
-
-        if (!epubResponse.ok) {
-
-          throw new Error(
-            `EPUB could not be downloaded (${epubResponse.status})`
-          );
-
-        }
-
-
-        const epubData =
-          await epubResponse.arrayBuffer();
-
-
-        console.log(
-          'EPUB downloaded:',
-          epubData.byteLength,
-          'bytes'
-        );
-
-
-        if (!epubData.byteLength) {
-
-          throw new Error(
-            'The EPUB file is empty.'
-          );
-
-        }
-
-
-        /* -----------------------------------------------
-           CLEAR VIEWER
-        ------------------------------------------------ */
-
-        viewer.innerHTML = '';
-
-
-        /* -----------------------------------------------
-           CREATE EPUB BOOK
-        ------------------------------------------------ */
-
-        epubBook =
-          ePub(epubData);
-
-
-        /* -----------------------------------------------
-           CREATE RENDITION
-        ------------------------------------------------ */
-
-        rendition =
-          epubBook.renderTo(
-            'viewer',
-            {
-
-              width: '100%',
-
-              height: '100%',
-
-              spread: 'auto',
-
-              allowScriptedContent: true,
-
-              manager: 'default',
-
-              flow: 'paginated'
-
-            }
-          );
-
-
-        /* -----------------------------------------------
-           LOCATION CHANGES
-        ------------------------------------------------ */
-
-        rendition.on(
-          'relocated',
-          function(location) {
-
-            console.log(
-              'EPUB location:',
-              location
-            );
-
-            updateProgress(location);
+            iframe.style.maxWidth =
+              '100%';
 
           }
-        );
 
+        } catch (e) {
 
-        /* -----------------------------------------------
-           RENDER BOOK
-        ------------------------------------------------ */
-
-        await rendition.display();
-
-
-        console.log(
-          'EPUB rendered successfully.'
-        );
-
-
-        /* -----------------------------------------------
-           ENABLE NAVIGATION
-        ------------------------------------------------ */
-
-        updateButtons();
-
-        addNavigationZones();
-
-
-        /* -----------------------------------------------
-           BOOK READY
-        ------------------------------------------------ */
-
-        if (epubBook.navigation) {
-
-          console.log(
-            'EPUB navigation loaded.'
+          console.warn(
+            'Could not style EPUB iframe:',
+            e
           );
 
         }
 
-      } catch (error) {
-
-        console.error(
-          'EPUB READER ERROR:',
-          error
-        );
-
-
-        message(`
-          <div>
-
-            <strong>
-              Unable to open this book.
-            </strong>
-
-            <br><br>
-
-            ${error.message}
-
-            <br><br>
-
-            <small>
-              Check the browser console for more details.
-            </small>
-
-          </div>
-        `);
-
       }
+    );
 
-    }
+
+    /*
+      -----------------------------------------------
+      FIRST SECTION
+      -----------------------------------------------
+    */
+
+    viewer.innerHTML = '';
+
+    currentIndex = 0;
+
+    updateNavigation();
+
+    await displaySection(0);
 
 
-    /* =========================================================
-       START
-    ========================================================= */
+    console.log(
+      'EPUB reader initialized successfully.'
+    );
 
-    initReader();
+  } catch (error) {
 
-  </script>
+    console.error(
+      'EPUB READER ERROR:',
+      error
+    );
+
+
+    message(`
+      <div>
+
+        <strong>
+          Unable to open this book.
+        </strong>
+
+        <br><br>
+
+        ${error.message}
+
+        <br><br>
+
+        <small>
+          Check the browser console for details.
+        </small>
+
+      </div>
+    `);
+
+  }
+
+}
+
+
+/*
+  START
+*/
+
+initReader();
+
+</script>
 
 </body>
 </html>
