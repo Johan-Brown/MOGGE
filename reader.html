@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b4f43">
+  <title>Reading — Mogge</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { min-height: 100vh; background: #eef5f2; }
+    .reader-header { position: sticky; top: 0; z-index: 10; background: #0b4f43; color: white; box-shadow: 0 8px 25px rgba(0,0,0,.12); }
+    .reader-nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .back-link { color: white; text-decoration: none; font-weight: 700; }
+    .reader-title { margin: 0; font-size: 18px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .reader-shell { width: min(1100px, calc(100% - 24px)); margin: 18px auto 30px; }
+    #viewer { min-height: calc(100vh - 145px); background: white; border-radius: 18px; box-shadow: 0 15px 45px rgba(16,65,53,.12); overflow: hidden; }
+    .reader-message { display: grid; place-items: center; min-height: 50vh; padding: 30px; color: #65736f; text-align: center; }
+    @media (max-width: 600px) { .reader-title { max-width: 55%; font-size: 15px; } }
+  </style>
+</head>
+<body>
+  <header class="reader-header">
+    <div class="container reader-nav">
+      <a class="back-link" href="./">← Back to Mogge</a>
+      <h1 id="readerTitle" class="reader-title">Loading book…</h1>
+    </div>
+  </header>
+
+  <main class="reader-shell">
+    <div id="viewer">
+      <div class="reader-message">Preparing the reader…</div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const requestedBook = params.get('book');
+    const viewer = document.getElementById('viewer');
+    const readerTitle = document.getElementById('readerTitle');
+
+    function message(text) {
+      viewer.innerHTML = '<div class="reader-message">' + text + '</div>';
+    }
+
+    async function initReader() {
+      if (!requestedBook) {
+        message('No book was selected.');
+        return;
+      }
+
+      try {
+        const response = await fetch('./books.json', { cache: 'no-cache' });
+        if (!response.ok) throw new Error('books.json could not be loaded.');
+        const data = await response.json();
+        const books = Array.isArray(data) ? data : (data.books || []);
+        const book = books.find(item => item.file === requestedBook);
+
+        if (!book) {
+          message('That book is not available in this collection.');
+          return;
+        }
+
+        readerTitle.textContent = book.title || 'Mogge Book';
+        viewer.innerHTML = '';
+        const epub = ePub(book.file);
+        const rendition = epub.renderTo('viewer', {
+          width: '100%',
+          height: 'calc(100vh - 145px)',
+          spread: 'auto'
+        });
+        await rendition.display();
+      } catch (error) {
+        console.error(error);
+        message('Unable to open this EPUB in the browser. You can still open the EPUB file directly from the library repository.');
+      }
+    }
+
+    initReader();
+  </script>
+</body>
+</html>

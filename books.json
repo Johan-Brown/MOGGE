@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-08-26T06:51:15.802Z",
+  "books": [
+    {
+      "title": "Amma Needs Help",
+      "slug": "amma-needs-help",
+      "file": "books/Amma Needs Help.epub",
+      "format": "epub",
+      "status": "published",
+      "order": 1
+    },
+    {
+      "title": "Meera's First Song",
+      "slug": "meera-s-first-song",
+      "file": "books/Meera's First Song.epub",
+      "format": "epub",
+      "status": "published",
+      "order": 2
+    },
+    {
+      "title": "Riyas Full Tiffin",
+      "slug": "riyas-full-tiffin",
+      "file": "books/Riyas Full Tiffin.epub",
+      "format": "epub",
+      "status": "published",
+      "order": 3
+    },
+    {
+      "title": "The Long Queue at the Mela",
+      "slug": "the-long-queue-at-the-mela",
+      "file": "books/The Long Queue at the Mela.epub",
+      "format": "epub",
+      "status": "published",
+      "order": 4
+    }
+  ]
+}
