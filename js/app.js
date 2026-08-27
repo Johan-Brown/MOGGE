@@ -32,7 +32,7 @@ function renderCategory() {
   const category = state.category || {};
   const title = category.displayName || category.name || category.title || 'Mogge';
   document.title = `${title} — Empathy Books`;
-  $('#categoryTitle').textContent = title;
+  $('#categoryTitle').textContent = "MOGGE";
   $('#categoryDescription').textContent = category.description || 'Mission Of Generating Global Empathy.';
   $('#categoryBadge').textContent = category.badge || 'EMPATHY BOOKS';
 }
