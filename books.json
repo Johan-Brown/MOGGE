@@ -1,37 +1,45 @@
 {
-  "generatedAt": "2026-08-26T06:51:15.802Z",
+  "generatedAt": "2026-08-27T12:40:04.980Z",
   "books": [
     {
-      "title": "Amma Needs Help",
-      "slug": "amma-needs-help",
-      "file": "books/Amma Needs Help.epub",
-      "format": "epub",
+      "title": "Amma Needs Help OB",
+      "slug": "amma-needs-help-ob",
+      "file": "books/Amma Needs Help_OB.epub",
+      "format": "EPUB",
       "status": "published",
       "order": 1
     },
     {
-      "title": "Meera's First Song",
-      "slug": "meera-s-first-song",
-      "file": "books/Meera's First Song.epub",
-      "format": "epub",
+      "title": "Meera's First Song OB",
+      "slug": "meera-s-first-song-ob",
+      "file": "books/Meera's First Song_OB.epub",
+      "format": "EPUB",
       "status": "published",
       "order": 2
     },
     {
-      "title": "Riyas Full Tiffin",
-      "slug": "riyas-full-tiffin",
-      "file": "books/Riyas Full Tiffin.epub",
-      "format": "epub",
+      "title": "Riyas Full Tiffin OB",
+      "slug": "riyas-full-tiffin-ob",
+      "file": "books/Riyas Full Tiffin_OB.epub",
+      "format": "EPUB",
       "status": "published",
       "order": 3
     },
     {
-      "title": "The Long Queue at the Mela",
-      "slug": "the-long-queue-at-the-mela",
-      "file": "books/The Long Queue at the Mela.epub",
-      "format": "epub",
+      "title": "The Kite String Mystery OB",
+      "slug": "the-kite-string-mystery-ob",
+      "file": "books/The Kite String Mystery_OB.epub",
+      "format": "EPUB",
       "status": "published",
       "order": 4
+    },
+    {
+      "title": "The Long Queue at the Mela OB",
+      "slug": "the-long-queue-at-the-mela-ob",
+      "file": "books/The Long Queue at the Mela_OB.epub",
+      "format": "EPUB",
+      "status": "published",
+      "order": 5
     }
   ]
 }
