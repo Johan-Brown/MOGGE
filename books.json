@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T06:53:35.896Z",
+  "generatedAt": "2026-09-04T06:40:31.709Z",
   "books": [
     {
       "title": "Amma Needs Help",
@@ -8,7 +8,7 @@
       "format": "EPUB",
       "status": "published",
       "order": 1,
-      "cover": "covers/amma-needs-help-ob.png"
+      "cover": "covers/amma-needs-help-ob.jpg"
     },
     {
       "title": "Home Visits",
@@ -26,7 +26,7 @@
       "format": "EPUB",
       "status": "published",
       "order": 3,
-      "cover": "covers/meera-s-first-song-ob.png"
+      "cover": "covers/meera-s-first-song-ob.jpg"
     },
     {
       "title": "Riyas Full Tiffin",
@@ -35,7 +35,7 @@
       "format": "EPUB",
       "status": "published",
       "order": 4,
-      "cover": "covers/riyas-full-tiffin-ob.png"
+      "cover": "covers/riyas-full-tiffin-ob.jpg"
     },
     {
       "title": "The Kite String Mystery",
@@ -44,7 +44,7 @@
       "format": "EPUB",
       "status": "published",
       "order": 5,
-      "cover": "covers/the-kite-string-mystery-ob.png"
+      "cover": "covers/the-kite-string-mystery-ob.jpg"
     },
     {
       "title": "The Long Queue at the Mela",
@@ -53,7 +53,7 @@
       "format": "EPUB",
       "status": "published",
       "order": 6,
-      "cover": "covers/the-long-queue-at-the-mela-ob.png"
+      "cover": "covers/the-long-queue-at-the-mela-ob.jpg"
     }
   ]
 }
